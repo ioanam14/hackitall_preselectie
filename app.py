@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -83,7 +83,7 @@ listTickets = [[[5], [2, 3], [4, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]],
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return render_template('index.html')
 
 
 @app.route('/buy', methods=['GET'])

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Buy tickets</title>
+    <link href="/static/css/base.css" rel="stylesheet"/>
+    <link href="/static/css/style.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+<div id="app">
+    <div class="header mb-3" data-raofz="12">
+	<div class="round-trip" data-raofz="12">
+
+        <h1 class="" data-raofz="30">Cumpără bilete de tren online
+			<span style="display: flex; max-width: 400px;  margin: 0 auto;" data-raofz="30"></span>
+        </h1>
+	</div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Numar persoane</label>
+                    <select v-model="numberOfPersons" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Statie plecare</label>
+                    <select v-model="start" class="form-control">
+                        <option value="0">Brasov</option>
+                        <option value="1">Predeal</option>
+                        <option value="2">Busteni</option>
+                        <option value="3">Sinaia</option>
+                        <option value="4">Ploiesti</option>
+                        <option value="5">Bucuresti</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Statie finala</label>
+                    <select v-model="end" class="form-control">
+                        <option value="0" :disabled="start >= 0">Brasov</option>
+                        <option value="1" :disabled="start >= 1">Predeal</option>
+                        <option value="2" :disabled="start >= 2">Busteni</option>
+                        <option value="3" :disabled="start >= 3">Sinaia</option>
+                        <option value="4" :disabled="start >= 4">Ploiesti</option>
+                        <option value="5" :disabled="start >= 5">Bucuresti</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-2">
+                <button class="btn btn-primary" @click="save()">Rezerva</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="train" id="train" widgetid="train">
+            <span class="title legend">Legendă:
+                <span>liber, </span>
+                <span class="ocupat">ocupat, </span>
+                <span class="mine">locurile tale</span>
+            </span>
+            <div v-for="item in 5" class="inner">
+                <div class="vagon">
+                    <span class="title">Vagon [[ item ]]</span>
+                    <table>
+                        <tbody>
+                            <tr v-for="line in 4">
+                                <template v-for="i in 10">
+                                    <td class="col tbl2-landscape" title="Perete">
+                                        <span class="est"
+                                              :class="{ 'ocupat': carriage[item - 1].includes((i - 1)  * 8 + line), 'mine': yourSeats[item - 1].includes((i - 1)  * 8 + line) }">
+                                            [[ (i - 1)  * 8 + line ]]
+                                        </span>
+                                    </td>
+                                    <td class="col tbl1-landscape" title="Perete">
+                                        <span class="vest" :class="{ 'ocupat': carriage[item - 1].includes((i - 1) * 8 + line + 4), 'mine': yourSeats[item - 1].includes((i - 1)  * 8 + line + 4) }">
+                                            [[ (i - 1) * 8 + line + 4 ]]
+                                        </span>
+                                    </td>
+                                </template>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        delimiters: ['[[', ']]'],
+        data: {
+            numberOfPersons: 1,
+            start: 0,
+            end: 5,
+            carriage: [
+                [],
+                [],
+                [7, 8],
+                [],
+                [],
+            ],
+            yourSeats: [
+                [1, 2, 3],
+                [],
+                [],
+                [],
+                [],
+            ]
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                window.setInterval(() => {
+                    let carriageNumber = Math.floor(Math.random() * 5)
+                    let number = Math.floor(Math.random() * 81)
+                    {#this.carriage[carriageNumber].push(number)#}
+                },1000);
+            })
+        },
+        methods: {
+            save() {
+                axios.post('/buy', {
+
+                }).then(function (response) {
+                    console.log(response)
+                })
+            }
+        }
+    })
+</script>
+</html>
