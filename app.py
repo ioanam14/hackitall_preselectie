@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
@@ -88,11 +90,16 @@ def hello_world():
     return render_template('index.html')
 
 
-@app.route('/buy', methods=['GET'])
+@app.route('/buy', methods=['POST'])
 def split():
-    nr_tickets = 4
-    start = 2
-    end = 4
+    try:
+        data = json.loads(request.data)
+    except Exception:
+        return jsonify({'success': False})
+
+    nr_tickets = data['numberOfPersons']
+    start = data['start']
+    end = data['end']
     ok = True
     index = 0
     tI = 5 - nr_tickets

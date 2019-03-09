@@ -148,7 +148,9 @@
         methods: {
             save() {
                 axios.post('/buy', {
-
+                    numberOfPersons: this.numberOfPersons,
+                    start: this.start,
+                    end: this.end,
                 }).then(function (response) {
                     console.log(response)
                 })
