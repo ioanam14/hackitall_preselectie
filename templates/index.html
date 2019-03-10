@@ -124,12 +124,12 @@
             carriage: [
                 [],
                 [],
-                [7, 8],
+                [],
                 [],
                 [],
             ],
             yourSeats: [
-                [1, 2, 3],
+                [],
                 [],
                 [],
                 [],
@@ -153,7 +153,19 @@
                     end: this.end,
                 }).then(function (response) {
                     console.log(response)
+
+                    this.emptyYourSeats()
+
                 })
+            },
+            emptyYourSeats() {
+                this.yourSeats = [
+                    [],
+                    [],
+                    [],
+                    [],
+                    [],
+                ]
             }
         }
     })
