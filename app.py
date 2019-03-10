@@ -51,7 +51,7 @@ class Compartment:
     def get_all_free_seats(self, start, end):
         list = []
         for i in self.seats:
-            if i.verify_if_free(start, end) is False:
+            if i.verify_if_free(start, end):
                 list.append(i.seat_no)
         return list
 
@@ -84,6 +84,7 @@ class Carriage:
             l = c.get_all_free_seats(start, end)
             free_seats = free_seats + l
         return free_seats
+
 
 class Train:
     def __init__(self, no_carriages):
@@ -195,11 +196,12 @@ def get_all_free_seats():
     for carriage in train.carriages:
         l = carriage.get_free_seats_between_stations(start, end)
         dictVal = {
-            'carriage' : carriage.carriage_no,
+            'carriage': carriage.carriage_no,
             'seats': l
         }
         free_seats.append(dictVal)
     return jsonify({'success': True, 'data': free_seats})
+
 
 if __name__ == '__main__':
     app.run()
