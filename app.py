@@ -98,7 +98,7 @@ class Train:
             self.carriages.append(Carriage(10, i))
 
 
-train = Train(1)
+train = Train(5)
 listTickets = [[[5], [2, 3], [4, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]],
                [[4], [2, 2], [3, 1], [2, 1, 1], [1, 1, 1, 1]], [[3], [2, 1], [1, 1, 1]], [[2], [1, 1]], [[1]]]
 
@@ -151,19 +151,14 @@ def split():
             break
 
     if len(seatDict) == 0:
-        print("There are no more seats")
         return jsonify({'success': False, 'message': 'There are no more seats'})
     else:
         for value in seatDict:
             for key, val in value.items():
-                if key == 'carriage' or key == 'compartment':
-                    print(key, val)
-                else:
+                if key == 'seats':
                     for i in val:
-                        print(i)
                         i.set_busy(start, end)
 
-        print('\n')
 
         newDictArray = []
         for value in seatDict:
