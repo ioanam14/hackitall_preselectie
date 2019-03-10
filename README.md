@@ -16,6 +16,8 @@ Input:
 Output:
 * numarul vagonului si numarul locului pentru fiecare bilet din grup
 
+![1](https://i.imgur.com/RTe6o19.jpg)
+
 ## Descrierea situatiilor care pot sa apara
 
 Analizand datele problemei putem observa ca daca sunt 6 statii si se urca intre 30 si 60 de persoane in fiecare statie, atunci vom avea
