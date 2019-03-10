@@ -45,3 +45,11 @@ Atunci cand se doreste  eliberarea unor noi bilete se primesc datele de intrare 
 deci incercam sa ii separam in subgrupuri si sa repetam procesul de mai sus pentru fiecare subgrup
 * in final se afiseaza vagonul si locurile atribuite
 
+
+## Mod de instalare
+
+* `sudo apt-get install python3.6`
+* `pip install Flask`
+* Navigate in project folder
+* `export FLASK_APP=app.py`
+* `flask run`

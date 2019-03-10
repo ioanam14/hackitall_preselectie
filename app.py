@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+import json
+
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -81,60 +83,25 @@ listTickets = [[[5], [2, 3], [4, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]],
                [[4], [2, 2], [3, 1], [2, 1, 1], [1, 1, 1, 1]], [[3], [2, 1], [1, 1, 1]], [[2], [1, 1]], [[1]]]
 
 
-
-
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return render_template('index.html')
 
 
-@app.route('/buy', methods=['GET'])
+@app.route('/buy', methods=['POST'])
 def split():
-    nr_tickets = 4
-    start = 2
-    end = 4
+    try:
+        data = json.loads(request.data)
+    except Exception:
+        return jsonify({'success': False})
+
+    nr_tickets = data['numberOfPersons']
+    start = data['start']
+    end = data['end']
     ok = True
     index = 0
     tI = 5 - nr_tickets
     seatDict = []
-
-    for listPossibilities in listTickets[tI]:
-        ok = True
-        for tickets in listPossibilities:
-            if buy(tickets, start, end) is not False:
-                best_carriage, sets_list = buy(tickets, start, end)
-                dictVal = {
-                    'carriage': best_carriage,
-                    'seats': sets_list
-                }
-                seatDict.append(dictVal)
-                print("Here")
-            else:
-                seatDict = []
-                ok = False
-                break
-            if ok == True:
-                break
-
-    for value in seatDict:
-        print(value)
-        for key, val in value.items():
-            if key == 'carriage':
-                print(val)
-            else:
-                for i in val:
-                    print(i)
-
-    return ""
-
-
-def buy(tickets, start, end):
-    # nr_tickets = request.form['nr_tickets']
-    # start = request.form['start']
-    # end = request.form['end']
-    nr_tickets = 4
-    start = 2
-    end = 4
 
     if (nr_tickets < 1 or nr_tickets > 5):
         return jsonify({
@@ -142,6 +109,38 @@ def buy(tickets, start, end):
             'message': 'To many tickets!'
         })
 
+    for listPossibilities in listTickets[index]:
+        ok = True
+        for tickets in listPossibilities:
+            best_carriage, best_compartment, sets_list = buy(tickets, start, end)
+            if len(sets_list) > 0:
+                seatDict.append({
+                    'carriage': best_carriage,
+                    'compartment': best_compartment,
+                    'seats': sets_list
+                })
+            else:
+                seatDict = []
+                ok = False
+                break
+        if ok == True:
+            break
+
+    if len(seatDict) == 0:
+        print("There are no more seats");
+
+    for value in seatDict:
+        for key, val in value.items():
+            if key == 'carriage' or key == 'compartment':
+                print(key, val)
+            else:
+                for i in val:
+                    print(i)
+    print('\n')
+    return ""
+
+
+def buy(nr_tickets, start, end):
     best_carriage = -1
     min_seats = 10
     best_compartment = -1
@@ -161,9 +160,12 @@ def buy(tickets, start, end):
         for seat in sets_list:
             seat.set_busy(start, end)
         best_compartment.free_places -= nr_tickets
-        return best_carriage, sets_list
-
-    return False
+        # print(best_carriage)
+        # for i in sets_list:
+        #     print(i)
+        return best_carriage, best_compartment, sets_list
+    else:
+        return -1, -1, []
 
 
 if __name__ == '__main__':
