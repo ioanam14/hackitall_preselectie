@@ -127,11 +127,11 @@ def split():
     index = 5 - nr_tickets
     seatDict = []
 
-    if (nr_tickets < 1 or nr_tickets > 5):
-        return jsonify({
-            'status': 'error',
-            'message': 'To many tickets!'
-        })
+    if nr_tickets < 1 or nr_tickets > 5:
+        return jsonify({'success': False, 'message': 'The number of tickets must be between 1 and 5'})
+
+    if start >= end:
+        return jsonify({'success': False, 'message': 'Destination must be after the starting point'})
 
     for listPossibilities in listTickets[index]:
         ok = True
@@ -147,12 +147,12 @@ def split():
                 seatDict = []
                 ok = False
                 break
-        if ok == True:
+        if ok is True:
             break
 
     if len(seatDict) == 0:
         print("There are no more seats")
-        return jsonify({'success': False})
+        return jsonify({'success': False, 'message': 'There are no more seats'})
     else:
         for value in seatDict:
             for key, val in value.items():
@@ -181,6 +181,7 @@ def buy(nr_tickets, start, end):
                         best_compartment = compartment
                         best_carriage = carriage.carriage_no
                         seats_list = list
+
     final_list = []
     if len(seats_list) > 0:
         for seat in seats_list:

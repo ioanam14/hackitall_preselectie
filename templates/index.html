@@ -124,12 +124,12 @@
             carriage: [
                 [],
                 [],
-                [7, 8],
+                [],
                 [],
                 [],
             ],
             yourSeats: [
-                [1, 2, 3],
+                [],
                 [],
                 [],
                 [],
@@ -151,9 +151,30 @@
                     numberOfPersons: this.numberOfPersons,
                     start: this.start,
                     end: this.end,
-                }).then(function (response) {
+                }).then((response) => {
                     console.log(response)
+                    let data = response.data.data
+
+                    this.addYourSeatsToOccupied()
+                    this.yourSeats = [
+                        [],
+                        [],
+                        [],
+                        [],
+                        [],
+                    ]
+
+                    for (let item of data) {
+                        console.log(item.carriage)
+                        console.log(item.seats)
+                        this.yourSeats[item.carriage].push.apply(this.yourSeats[item.carriage], item.seats)
+                    }
                 })
+            },
+            addYourSeatsToOccupied() {
+                for (let i = 0; i < 5; i++) {
+                    this.carriage[i].push.apply(this.carriage[i], this.yourSeats[i])
+                }
             }
         }
     })
