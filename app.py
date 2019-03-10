@@ -92,16 +92,6 @@ class Train:
         for i in range(no_carriages):
             self.carriages.append(Carriage(10, i))
 
-    def get_all_free_seats(self, start, end):
-        free_seats = []
-        for carriage in self.carriages:
-            l = carriage.get_free_seats_between_stations(start, end)
-            dictVal = {
-                'carriage' : carriage.carriage_no,
-                'seats': l
-            }
-            free_seats.append(dictVal)
-        return free_seats
 
 train = Train(5)
 listTickets = [[[5], [2, 3], [4, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]],
@@ -191,6 +181,25 @@ def buy(nr_tickets, start, end):
     else:
         return -1, -1, []
 
+
+@app.route('/get-free-seats', methods=['POST'])
+def get_all_free_seats():
+    try:
+        data = json.loads(request.data)
+    except Exception:
+        return jsonify({'success': False})
+
+    start = int(data['start'])
+    end = int(data['end'])
+    free_seats = []
+    for carriage in train.carriages:
+        l = carriage.get_free_seats_between_stations(start, end)
+        dictVal = {
+            'carriage' : carriage.carriage_no,
+            'seats': l
+        }
+        free_seats.append(dictVal)
+    return free_seats
 
 if __name__ == '__main__':
     app.run()
