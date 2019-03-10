@@ -85,6 +85,7 @@ class Carriage:
             free_seats = free_seats + l
         return free_seats
 
+
 class Train:
     def __init__(self, no_carriages):
         self.no_carriages = no_carriages
@@ -195,11 +196,12 @@ def get_all_free_seats():
     for carriage in train.carriages:
         l = carriage.get_free_seats_between_stations(start, end)
         dictVal = {
-            'carriage' : carriage.carriage_no,
+            'carriage': carriage.carriage_no,
             'seats': l
         }
         free_seats.append(dictVal)
     return free_seats
+
 
 if __name__ == '__main__':
     app.run()
