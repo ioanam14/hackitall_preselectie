@@ -16,7 +16,7 @@ Input:
 Output:
 * numarul vagonului si numarul locului pentru fiecare bilet din grup
 
-![1](https://i.imgur.com/RTe6o19.jpg)
+![1](https://i.imgur.com/1J1aLl1.png)
 
 ## Descrierea situatiilor care pot sa apara
 
