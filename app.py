@@ -199,7 +199,7 @@ def get_all_free_seats():
             'seats': l
         }
         free_seats.append(dictVal)
-    return free_seats
+    return jsonify({'success': True, 'data': free_seats})
 
 if __name__ == '__main__':
     app.run()
