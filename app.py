@@ -104,7 +104,7 @@ listTickets = [[[5], [2, 3], [4, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]],
 
 
 @app.route('/')
-def hello_world():
+def index():
     return render_template('index.html')
 
 
