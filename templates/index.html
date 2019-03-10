@@ -150,6 +150,9 @@
                 },1000);
             })
         },
+        created() {
+            this.onStationChange()
+        },
         methods: {
             save() {
                 axios.post('/buy', {
@@ -160,9 +163,11 @@
                     let success = response.data.success
                     let data = response.data.data
 
+                    this.addYourSeatsToOccupied()
+                    this.emptyYourSeats()
+
                     if (success === true) {
-                        this.addYourSeatsToOccupied()
-                        this.emptyYourSeats()
+                        this.errorMessage = ''
 
                         for (let item of data) {
                             this.yourSeats[item.carriage].push.apply(this.yourSeats[item.carriage], item.seats)
@@ -194,6 +199,7 @@
 
                     console.log(data)
                     if (success === true) {
+                        this.errorMessage = ''
                         this.emptyCarriage()
                         this.emptyYourSeats()
 
