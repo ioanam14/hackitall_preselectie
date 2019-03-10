@@ -51,7 +51,7 @@ class Compartment:
     def get_all_free_seats(self, start, end):
         list = []
         for i in self.seats:
-            if i.verify_if_free(start, end) is False:
+            if i.verify_if_free(start, end):
                 list.append(i.seat_no)
         return list
 
