@@ -51,6 +51,14 @@ class Compartment:
     def __str__(self):
         return str(self.comp_no + 1)
 
+    def get_free_places_between_two_stations(self, start, end):
+        no = 0
+        for i in self.seats:
+            busy = i.verify_if_free(start, end)
+            if busy is False:
+                no += 1
+        return no
+
 
 class Carriage:
     def __init__(self, no_compartments, carriage_no):
@@ -95,12 +103,11 @@ def split():
     except Exception:
         return jsonify({'success': False})
 
-    nr_tickets = data['numberOfPersons']
-    start = data['start']
-    end = data['end']
+    nr_tickets = int(data['numberOfPersons'])
+    start = int(data['start'])
+    end = int(data['end'])
     ok = True
-    index = 0
-    tI = 5 - nr_tickets
+    index = 5 - nr_tickets
     seatDict = []
 
     if (nr_tickets < 1 or nr_tickets > 5):
@@ -127,17 +134,18 @@ def split():
             break
 
     if len(seatDict) == 0:
-        print("There are no more seats");
-
-    for value in seatDict:
-        for key, val in value.items():
-            if key == 'carriage' or key == 'compartment':
-                print(key, val)
-            else:
-                for i in val:
-                    print(i)
-    print('\n')
-    return ""
+        print("There are no more seats")
+        return jsonify({'success': False})
+    else:
+        for value in seatDict:
+            for key, val in value.items():
+                if key == 'carriage' or key == 'compartment':
+                    print(key, val)
+                else:
+                    for i in val:
+                        print(i)
+        print('\n')
+        return jsonify({'success': True, 'data': seatDict})
 
 
 def buy(nr_tickets, start, end):
@@ -147,11 +155,12 @@ def buy(nr_tickets, start, end):
     sets_list = []
     for carriage in train.carriages:
         for compartment in carriage.compartments:
-            if compartment.free_places >= nr_tickets:
+            free_places = compartment.get_free_places_between_two_stations(start, end)
+            if free_places >= nr_tickets:
                 list = compartment.verify_free_seats(nr_tickets, start, end)
                 if len(list) > 0:
-                    if min_seats > (8 - compartment.free_places) + nr_tickets:
-                        min_seats = (8 - compartment.free_places) + nr_tickets
+                    if min_seats > (8 - free_places) + nr_tickets:
+                        min_seats = (8 - free_places) + nr_tickets
                         best_compartment = compartment
                         best_carriage = carriage
                         sets_list = list
