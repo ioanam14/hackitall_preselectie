@@ -21,6 +21,10 @@ class Seat:
         for i in range(start, end):
             self.busy_stations[i] = True
 
+    def unset(self, start, end):
+        for i in range(start, end):
+            self.busy_stations[i] = False
+
     def __str__(self):
         return str(self.seat_no)
 
@@ -94,7 +98,7 @@ class Train:
             self.carriages.append(Carriage(10, i))
 
 
-train = Train(5)
+train = Train(1)
 listTickets = [[[5], [2, 3], [4, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]],
                [[4], [2, 2], [3, 1], [2, 1, 1], [1, 1, 1, 1]], [[3], [2, 1], [1, 1, 1]], [[2], [1, 1]], [[1]]]
 
@@ -135,6 +139,11 @@ def split():
                     'seats': sets_list
                 })
             else:
+                for value in seatDict:
+                    for key, val in value.items():
+                        if key == 'seats':
+                            for seat in val:
+                                seat.unset(start, end)
                 seatDict = []
                 ok = False
                 break
@@ -152,8 +161,28 @@ def split():
                 else:
                     for i in val:
                         print(i)
+                        i.set_busy(start, end)
+
         print('\n')
-        return jsonify({'success': True, 'data': seatDict})
+
+        newDictArray = []
+        for value in seatDict:
+            dictVal = {
+                'carriage': -1,
+                'compartment': -1,
+                'seats': []
+            }
+            for key, val in value.items():
+                if key == 'carriage' or key == 'compartment':
+                    dictVal[key] = val
+                else:
+                    l = []
+                    for i in val:
+                        l.append(i.seat_no)
+                        i.set_busy(start, end)
+                    dictVal[key] = l
+                newDictArray.append(dictVal)
+        return jsonify({'success': True, 'data': newDictArray})
 
 
 def buy(nr_tickets, start, end):
@@ -177,7 +206,7 @@ def buy(nr_tickets, start, end):
     if len(seats_list) > 0:
         for seat in seats_list:
             seat.set_busy(start, end)
-            final_list.append(seat.seat_no)
+            final_list.append(seat)
         return best_carriage, best_compartment.comp_no + 1, final_list
     else:
         return -1, -1, []
