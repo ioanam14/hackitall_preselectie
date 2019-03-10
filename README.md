@@ -1,6 +1,6 @@
 # HackITall Preselectie
 
-## Desrierea problemei
+## Descrierea problemei
 
 Consideram un tren care circula intre Brasov si Bucuresti si opreste in 6 statii. Din fiecare statie se pot urca intre 30 si 60 de persoane.
 Acestia calatoresc in grupuri care pot avea intre 1 si 5 persoane. Trenul are in componenta lui 5 vagoane, fiecare vagon are 10 compartimente a cate 8 locuri.
