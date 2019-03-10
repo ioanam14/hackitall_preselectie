@@ -152,7 +152,7 @@ def buy(nr_tickets, start, end):
     best_carriage = -1
     min_seats = 10
     best_compartment = -1
-    sets_list = []
+    seats_list = []
     for carriage in train.carriages:
         for compartment in carriage.compartments:
             free_places = compartment.get_free_places_between_two_stations(start, end)
@@ -162,17 +162,15 @@ def buy(nr_tickets, start, end):
                     if min_seats > (8 - free_places) + nr_tickets:
                         min_seats = (8 - free_places) + nr_tickets
                         best_compartment = compartment
-                        best_carriage = carriage
-                        sets_list = list
-
-    if len(sets_list) > 0:
-        for seat in sets_list:
+                        best_carriage = carriage.carriage_no
+                        seats_list = list
+    final_list = []
+    if len(seats_list) > 0:
+        for seat in seats_list:
             seat.set_busy(start, end)
+            final_list.append(seat.seat_no)
         best_compartment.free_places -= nr_tickets
-        # print(best_carriage)
-        # for i in sets_list:
-        #     print(i)
-        return best_carriage, best_compartment, sets_list
+        return best_carriage, best_compartment.comp_no + 1, final_list
     else:
         return -1, -1, []
 
