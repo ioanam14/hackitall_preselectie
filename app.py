@@ -48,6 +48,13 @@ class Compartment:
         if no_seats_to_verify != 0:
             return []
 
+    def get_all_free_seats(self, start, end):
+        list = []
+        for i in self.seats:
+            if i.verify_if_free(start, end) is False:
+                list.append(i.seat_no)
+        return list
+
     def __str__(self):
         return str(self.comp_no + 1)
 
@@ -68,25 +75,35 @@ class Carriage:
         for i in range(no_compartments):
             self.compartments.append(Compartment(8, i))
 
-    def free_places(self):
-        no = 0
-        for x in self.compartments:
-            no = no + x.free_places
-        return no
-
     def __str__(self):
         return str(self.carriage_no)
 
+    def get_free_seats_between_stations(self, start, end):
+        free_seats = []
+        for c in self.compartments:
+            l = c.get_all_free_seats(start, end)
+            free_seats = free_seats + l
+        return free_seats
 
 class Train:
     def __init__(self, no_carriages):
         self.no_carriages = no_carriages
         self.carriages = []
         for i in range(no_carriages):
-            self.carriages.append(Carriage(10, i + 1))
+            self.carriages.append(Carriage(10, i))
 
+    def get_all_free_seats(self, start, end):
+        free_seats = []
+        for carriage in self.carriages:
+            l = carriage.get_free_seats_between_stations(start, end)
+            dictVal = {
+                'carriage' : carriage.carriage_no,
+                'seats': l
+            }
+            free_seats.append(dictVal)
+        return free_seats
 
-train = Train(1)
+train = Train(5)
 listTickets = [[[5], [2, 3], [4, 1], [2, 2, 1], [2, 1, 1, 1], [1, 1, 1, 1, 1]],
                [[4], [2, 2], [3, 1], [2, 1, 1], [1, 1, 1, 1]], [[3], [2, 1], [1, 1, 1]], [[2], [1, 1]], [[1]]]
 
@@ -169,7 +186,6 @@ def buy(nr_tickets, start, end):
         for seat in seats_list:
             seat.set_busy(start, end)
             final_list.append(seat.seat_no)
-        best_compartment.free_places -= nr_tickets
         return best_carriage, best_compartment.comp_no + 1, final_list
     else:
         return -1, -1, []
